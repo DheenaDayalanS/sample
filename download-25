@@ -1,0 +1,131 @@
+#!/bin/bash 
+
+#Checking whether the download option is working or not...
+#export SPILLBOX_CMD_DIR=/home/dheena/spill_tar/
+
+pass=0
+fail=0
+mk1=$($SPILLBOX_CMD_DIR/splrun run mkdir $SPILLBOX_CMD_DIR/down_dir)
+mk2=$($SPILLBOX_CMD_DIR/splrun run touch $SPILLBOX_CMD_DIR/down_dir/file1.sh $SPILLBOX_CMD_DIR/down_dir/file2.sh)
+mk3=$($SPILLBOX_CMD_DIR/splrun run mkdir $SPILLBOX_CMD_DIR/down_dir/sub_dir)
+mk4=$($SPILLBOX_CMD_DIR/splrun run touch $SPILLBOX_CMD_DIR/down_dir/sub_dir/file3.sh)
+
+$SPILLBOX_CMD_DIR/splrun download --fe ".sh" $SPILLBOX_CMD_DIR/down_dir
+#if [ -d $SPILLBOX_CMD_DIR/down_dir -a -f $SPILLBOX_CMD_DIR/down_dir/*.sh ]; then
+#if [ -d $SPILLBOX_CMD_DIR/down_dir -a -f $SPILLBOX_CMD_DIR/down_dir/file1.sh -a -d $SPILLBOX_CMD_DIR/down_dir/sub_dir ]; then
+if [ -d $SPILLBOX_CMD_DIR/down_dir -a find $SPILLBOX_CMD_DIR/down_dir/ -n "*.sh" -a -d $SPILLBOX_CMD_DIR/down_dir/sub_dir ]; then
+#if [ -f  $SPILLBOX_CMD_DIR/down_dir/file1.sh ]; then
+	echo "Pass"
+else
+	echo" Fail"
+fi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#if [ ${#mk1} -gt 0 ]; then
+#	echo -e " \e[32mCreated\e[0m"
+#	((pass=pass+1))
+#else
+#	echo -e " \e[31mError while Creating\e[0m"
+#	((fail=fail+1))
+#fi
+
+#if [ -f $SPILLBOX_CMD_DIR/down_dir/file1.sh -a -f $SPILLBOX_CMD_DIR/down_dir/file2.sh ]; then
+#        echo -e " \e[32mCreated\e[0m"
+#        ((pass=pass+1))
+#else
+#        echo -e " \e[31mError while Creating\e[0m"
+#        ((fail=fail+1))
+#fi
+
+#if [ -d $SPILLBOX_CMD_DIR/down_dir/sub_dir ]; then
+#        echo -e " \e[32mCreated\e[0m"
+#        ((pass=pass+1))
+#else
+#        echo -e " \e[31mError while Creating\e[0m"
+#       ((fail=fail+1))
+#fi
+
+#if [ -f $SPILLBOX_CMD_DIR/down_dir/sub_dir/file3.sh ]; then
+#        echo -e " \e[32mCreated\e[0m"
+#        ((pass=pass+1))
+#else
+#        echo -e " \e[31mError while Creating\e[0m"
+#        ((fail=fail+1))
+#fi
+
+#pt=$($SPILLBOX_CMD_DIR/splrun run)
+#if [ ${#mk1} -gt 0 ]; then
+#	echo "pass"
+#	((pass=pass+1))
+#else 
+#	echo "Fail"
+#	((fail=fail+1))
+#fi
+
+#if [ ${#mk2} -gt 0 ]; then
+#        echo "pass"
+#        ((pass=pass+1))
+#else
+#        echo "Fail"
+#        ((fail=fail+1))
+#fi
+
+
+#if [ ${#mk3} -gt 0 ]; then
+#        echo "pass"
+#        ((pass=pass+1))
+#else
+#        echo "Fail"
+#        ((fail=fail+1))
+#fi
+
+
+
+#if [ ${#mk4} -gt 0 ]; then
+#        echo "pass"
+#        ((pass=pass+1))
+#else
+#        echo "Fail"
+#        ((fail=fail+1))
+#fi
+
+
+
+
+
+
+
+
+
+
+
+
+
+#if [ -f $PWD/snap1 ]; then
+#	echo -e " \e[32mPassed\e[0m"
+#else
+#	echo -e " \e[31mFailed\e[0m"
+#fi
+

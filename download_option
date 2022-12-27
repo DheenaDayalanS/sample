@@ -1,0 +1,119 @@
+#!/bin/bash
+
+#Checking whether the download option is working or not...
+#export SPILLBOX_CMD_DIR=/home/dheena/spill_tar/   #"spill_tar=This is the directory where splrun is located."
+
+#prerequistes
+pre=0
+np=0
+
+#Checking for SPILLBOX_CMD_DIR vairable is set or not...
+((np=np+1))
+if [ ${#SPILLBOX_CMD_DIR} -gt 0 ]; then
+	((pre=pre+1))
+else
+	echo "Prerequistes Failed"
+	echo "Error: Set the SPILLBOX_CMD_DIR (i.e.the directory path where the spillbox tar(Splrun) exist)"
+	echo "  Example: export SPILLBOX_CMD_DIR=/home/dheena/spill_tar"
+fi
+
+#checking the project is in applied stage or not...
+((np=np+1))
+as=$($SPILLBOX_CMD_DIR/splrun project list | grep $SPILLBOX_PROJECT | grep applied )
+if [ ${#SPILLBOX_CMD_DIR} -gt 0 ]; then
+	((pre=pre+1))
+else
+	echo "Prerequistes Failed"
+        echo "Error: Spillbox project is not in applied stage"
+fi
+
+#checking the ssh is running or not...
+((np=np+1))
+SERVICE=sshd
+if [ ${#SERVICE} -gt 0 ]; then
+	((pre=pre+1))
+else
+        echo "Prerequistes Failed"
+        echo "Error: $SERVICE is not running"
+fi
+
+#checking the existence of the key is in the .config directory or not...
+((np=np+1))
+if [ -d $HOME/.config/spillbox/$SPILLBOX_PROJECT -a -f $HOME/.config/spillbox/$SPILLBOX_PROJECT/id_rsa ]; then
+      ((pre=pre+1))
+else
+      echo "Prerequisites Failed"
+      echo "Error: Key is not exist in the .config directory"
+fi
+
+#checking the process is running or not...
+((np=np+1))
+proc1=$(ps aux | grep splc | grep  "$SPILLBOX_PROJECT" | grep spillbox)
+proc2=$(ps aux | grep splterrac | grep "$SPILLBOX_PROJECT" | grep spillbox)
+proc3=$(ps aux | grep splsh | grep "$SPILLBOX_PROJECT"  | grep spillbox)
+
+if [ "${#proc1}" -gt 0 -a "${#proc2}" -gt 0 -a "${#proc3}" -gt 0 ] ;then
+      ((pre=pre+1))
+else
+       echo "Prerequisites Failed"
+       echo "Error: Spillbox projects is not running"
+fi
+
+if [ $np -eq  $pre ]; then
+      echo "Precheck ok"
+else
+      exit 1
+fi
+
+#Creating new directory, files and sub-directory...
+mk1=$($SPILLBOX_CMD_DIR/splrun run mkdir $SPILLBOX_CMD_DIR/down_dir)
+mk2=$($SPILLBOX_CMD_DIR/splrun run touch $SPILLBOX_CMD_DIR/down_dir/file1.sh $SPILLBOX_CMD_DIR/down_dir/file2.sh)
+mk3=$($SPILLBOX_CMD_DIR/splrun run mkdir $SPILLBOX_CMD_DIR/down_dir/sub_dir)
+mk4=$($SPILLBOX_CMD_DIR/splrun run touch $SPILLBOX_CMD_DIR/down_dir/sub_dir/file3.sh)
+
+pass=0
+fail=0
+ch=0
+#Checking for directory...
+((ch=ch+1))
+$SPILLBOX_CMD_DIR/splrun download --r --fe ".sh" $SPILLBOX_CMD_DIR/down_dir
+echo "Checking for directory..."
+if [ -d $SPILLBOX_CMD_DIR/down_dir ]; then
+	if [[ -f $SPILLBOX_CMD_DIR/down_dir/file1.sh && $SPILLBOX_CMD_DIR/down_dir/file2.sh ]]; then
+		((pass=pass+1))
+		echo -e " \e[32mCHECK PASSED...\e[0m"
+	else
+                echo -e " \e[31mCHECK FAILED...\e[0m"
+	fi
+        echo -e "	\e[32mCHECK PASSED...\e[0m"
+else
+        echo -e "	\e[31mCHECK FAILED...\e[0m"
+	((fail=fail+1))
+fi
+echo ...........................................
+#Checking for sub-directory...
+((ch=ch+1))
+echo "Checking for sub-directory..."
+if [ -d $SPILLBOX_CMD_DIR/down_dir/sub_dir ]; then
+        if [ -f $SPILLBOX_CMD_DIR/down_dir/sub_dir/file3.sh ]; then
+        	((pass=pass+1))
+		echo -e " \e[32mCHECK PASSED...\e[0m"
+	else
+        	echo -e " \e[31mCHECK FAILED...\e[0m"
+        	((fail=fail+1))
+        fi
+        echo -e "	\e[32mCHECK PASSED...\e[0m"
+else
+        echo -e "	\e[31mCHECK FAILED...\e[0m"
+	((fail=fail+1))
+fi
+
+#Result
+echo ......................................... 
+if [ $ch -eq $pass ]; then
+       echo  -e "\e[32mTESTCASE PASSED\e[0m"
+       echo "DOWNLOAD OPTION IS WORKING... "
+else
+      echo -e "\e[31mTESTCASE FAILED\e[0m"
+      echo "DOWNLOAD OPTION IS NOT WORKING..."
+fi

@@ -1,0 +1,56 @@
+#!/bin/bash
+
+#Checking for archive option
+
+
+#Two variable
+#pass=0
+#fail=0
+#i=$(ls $PWD > sample25)
+#j=$(grep "archive-check" $PWD/sample25)
+#if [ ${#j} -gt 0 ]; then
+#        echo -e " \e[32mPassed\e[0m"
+#        ((pass=pass+1))
+#else
+#        echo -e " \e[31mFailed\e[0m"
+#        echo " Error: NEw directory is not created on the On-prem"
+#        ((fail=fail+1))
+#fi
+
+#One variable
+#pass=0
+#fail=0
+#j=$(ls $PWD > sample25 | grep "archive-check" $PWD/sample25)
+#if [ ${#j} -gt 0 ]; then
+#        echo -e " \e[32mPassed\e[0m"
+#        ((pass=pass+1))
+#else
+#        echo -e " \e[31mFailed\e[0m"
+#        echo " Error: NEw directory is not created on the On-prem"
+#        ((fail=fail+1))
+#fi
+
+
+#Without variable
+#pass=0
+#fail=0
+#if [ grep "archive-check" $PWD/sample25 ]; then
+#	echo -e " \e[32mPassed\e[0m"
+#	((pass=pass+1))
+#else
+#	echo -e " \e[31mFailed\e[0m"
+#	echo " Error: NEw directory is not created on the On-prem"
+#	((fail=fail+1))
+#fi
+
+#Optimized
+pass=0
+fail=0
+if [ -d $PWD/archive-check ]; then
+        echo -e " \e[32mPassed\e[0m"
+        ((pass=pass+1))
+else
+        echo -e " \e[31mFailed\e[0m"
+        echo " Error: NEw directory is not created on the On-prem"
+        ((fail=fail+1))
+fi
